@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thrive — Login</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: sans-serif;
+      background: #e8f5e9;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      overflow: hidden;
+    }
+
+    .bg-circles {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .circle {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.15;
+      animation: float 8s ease-in-out infinite;
+    }
+    .circle-1 { width: 300px; height: 300px; background: #0F6E56; top: -80px; left: -80px; animation-delay: 0s; }
+    .circle-2 { width: 200px; height: 200px; background: #1D9E75; bottom: -60px; right: -60px; animation-delay: 2s; }
+    .circle-3 { width: 150px; height: 150px; background: #5DCAA5; top: 40%; right: 10%; animation-delay: 4s; }
+    .circle-4 { width: 100px; height: 100px; background: #0F6E56; bottom: 20%; left: 5%; animation-delay: 1s; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) scale(1); }
+      50% { transform: translateY(-20px) scale(1.05); }
+    }
+
+    .container {
+      width: 100%;
+      max-width: 420px;
+      position: relative;
+      z-index: 1;
+      animation: slideUp 0.6s ease forwards;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 28px;
+    }
+    .logo-icon {
+      width: 48px; height: 48px;
+      background: #0F6E56;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 15px rgba(15,110,86,0.3);
+      animation: pulse 3s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 4px 15px rgba(15,110,86,0.3); }
+      50% { box-shadow: 0 4px 25px rgba(15,110,86,0.6); }
+    }
+    .logo-text { font-size: 28px; font-weight: 700; color: #0F6E56; letter-spacing: 1px; }
+
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 32px;
+      border: 1px solid #c8e6c9;
+      box-shadow: 0 8px 32px rgba(15,110,86,0.1);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 24px;
+      background: #f1f8f1;
+      border-radius: 10px;
+      padding: 4px;
+    }
+    .tab {
+      flex: 1; padding: 9px;
+      border: none; border-radius: 8px;
+      font-size: 14px; cursor: pointer;
+      background: transparent; color: #666;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    .tab.active {
+      background: #0F6E56;
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(15,110,86,0.3);
+    }
+
+    .card h2 { font-size: 20px; font-weight: 700; color: #1a1a1a; margin-bottom: 4px; }
+    .card p { font-size: 14px; color: #888; margin-bottom: 20px; }
+
+    .form-group { margin-bottom: 14px; position: relative; }
+    label { display: block; font-size: 13px; font-weight: 600; color: #444; margin-bottom: 6px; }
+
+    .input-wrap { position: relative; }
+    .input-wrap i {
+      position: absolute;
+      left: 12px; top: 50%;
+      transform: translateY(-50%);
+      color: #aaa; font-size: 16px;
+      transition: color 0.2s;
+    }
+    input {
+      width: 100%;
+      padding: 11px 14px 11px 38px;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 14px;
+      outline: none;
+      transition: all 0.3s ease;
+      background: #fafafa;
+    }
+    input:focus {
+      border-color: #0F6E56;
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(15,110,86,0.1);
+    }
+    input:focus + i, .input-wrap:focus-within i { color: #0F6E56; }
+
+    .nivel-group { display: flex; gap: 6px; margin-bottom: 14px; }
+    .nivel-btn {
+      flex: 1; padding: 10px 4px;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 11px; font-weight: 600;
+      cursor: pointer; background: #fafafa;
+      color: #666;
+      transition: all 0.3s ease;
+      text-align: center;
+      line-height: 1.4;
+    }
+    .nivel-btn:hover { border-color: #1D9E75; background: #f0faf6; }
+    .nivel-btn.active {
+      border-color: #0F6E56;
+      background: #EAF3DE;
+      color: #27500A;
+      box-shadow: 0 2px 8px rgba(15,110,86,0.15);
+    }
+
+    .btn-submit {
+      width: 100%; padding: 13px;
+      background: #0F6E56; color: #fff;
+      border: none; border-radius: 10px;
+      font-size: 15px; font-weight: 700;
+      cursor: pointer; margin-top: 6px;
+      transition: all 0.3s ease;
+      position: relative; overflow: hidden;
+    }
+    .btn-submit:hover {
+      background: #1D9E75;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(15,110,86,0.35);
+    }
+    .btn-submit:active { transform: translateY(0); }
+
+    .btn-submit::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 0; height: 0;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.4s, height 0.4s;
+    }
+    .btn-submit:active::after { width: 300px; height: 300px; }
+
+    .msg {
+      margin-top: 14px; padding: 12px 14px;
+      border-radius: 10px; font-size: 13px;
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .msg.success { background: #EAF3DE; color: #27500A; display: block; border: 1px solid #c8e6c9; }
+    .msg.error { background: #FCEBEB; color: #A32D2D; display: block; border: 1px solid #f7c1c1; }
+
+    .footer-link {
+      text-align: center; margin-top: 20px;
+      font-size: 13px; color: #888;
+    }
+    .footer-link a { color: #0F6E56; text-decoration: none; font-weight: 600; }
+    .footer-link a:hover { text-decoration: underline; }
+
+    .tab-content { animation: fadeIn 0.3s ease; }
+  </style>
+</head>
+<body>
+  <div class="bg-circles">
+    <div class="circle circle-1"></div>
+    <div class="circle circle-2"></div>
+    <div class="circle circle-3"></div>
+    <div class="circle circle-4"></div>
+  </div>
+
+  <div class="container">
+    <div class="logo">
+      <div class="logo-icon">
+        <i class="ti ti-plant" style="font-size:26px;color:#9FE1CB"></i>
+      </div>
+      <span class="logo-text">Thrive</span>
+    </div>
+
+    <div class="card">
+      <div class="tabs">
+        <button class="tab active" onclick="mostrarTab('login')">Entrar</button>
+        <button class="tab" onclick="mostrarTab('cadastro')">Criar conta</button>
+      </div>
+
+      <!-- LOGIN -->
+      <div id="tab-login" class="tab-content">
+        <h2>Bem-vindo de volta!</h2>
+        <p>Entre na sua conta para continuar</p>
+        <div class="form-group">
+          <label>Email</label>
+          <div class="input-wrap">
+            <input type="email" id="login-email" placeholder="seu@email.com">
+            <i class="ti ti-mail"></i>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Senha</label>
+          <div class="input-wrap">
+            <input type="password" id="login-senha" placeholder="••••••••">
+            <i class="ti ti-lock"></i>
+          </div>
+        </div>
+        <button class="btn-submit" onclick="fazerLogin()">Entrar na conta</button>
+        <div id="login-msg" class="msg"></div>
+      </div>
+
+      <!-- CADASTRO -->
+      <div id="tab-cadastro" class="tab-content" style="display:none">
+        <h2>Crie sua conta</h2>
+        <p>Comece sua jornada financeira agora</p>
+        <div class="form-group">
+          <label>Nome</label>
+          <div class="input-wrap">
+            <input type="text" id="cadastro-nome" placeholder="Seu nome completo">
+            <i class="ti ti-user"></i>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <div class="input-wrap">
+            <input type="email" id="cadastro-email" placeholder="seu@email.com">
+            <i class="ti ti-mail"></i>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Senha</label>
+          <div class="input-wrap">
+            <input type="password" id="cadastro-senha" placeholder="••••••••">
+            <i class="ti ti-lock"></i>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Escolha seu nível</label>
+          <div class="nivel-group">
+            <button class="nivel-btn active" onclick="selecionarNivel('iniciante', this)">🌱<br>Iniciante</button>
+            <button class="nivel-btn" onclick="selecionarNivel('intermediario', this)">📈<br>Intermediário</button>
+            <button class="nivel-btn" onclick="selecionarNivel('avancado', this)">🔥<br>Avançado</button>
+          </div>
+        </div>
+        <button class="btn-submit" onclick="fazerCadastro()">Criar minha conta</button>
+        <div id="cadastro-msg" class="msg"></div>
+      </div>
+    </div>
+
+    <div class="footer-link">
+      <a href="index.html">🌱 Conheça o Thrive</a>
+    </div>
+  </div>
+
+  <script>
+    let nivelSelecionado = 'iniciante';
+
+    function mostrarTab(tab) {
+      document.getElementById('tab-login').style.display = tab === 'login' ? 'block' : 'none';
+      document.getElementById('tab-cadastro').style.display = tab === 'cadastro' ? 'block' : 'none';
+      document.querySelectorAll('.tab').forEach((t, i) => {
+        t.classList.toggle('active', (tab === 'login' && i === 0) || (tab === 'cadastro' && i === 1));
+      });
+    }
+
+    function selecionarNivel(nivel, btn) {
+      nivelSelecionado = nivel;
+      document.querySelectorAll('.nivel-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    async function fazerLogin() {
+      const email = document.getElementById('login-email').value;
+      const senha = document.getElementById('login-senha').value;
+      const msg = document.getElementById('login-msg');
+      const btn = document.querySelector('#tab-login .btn-submit');
+      btn.textContent = 'Entrando...';
+      try {
+        const res = await fetch('http://127.0.0.1:8000/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, senha })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('nome', data.nome);
+          localStorage.setItem('nivel', data.nivel);
+          msg.className = 'msg success';
+          msg.textContent = `Bem-vindo, ${data.nome}! Redirecionando...`;
+          setTimeout(() => window.location.href = 'dashboard.html', 1500);
+        } else {
+          msg.className = 'msg error';
+          msg.textContent = data.detail || 'Erro ao fazer login';
+          btn.textContent = 'Entrar na conta';
+        }
+      } catch {
+        msg.className = 'msg error';
+        msg.textContent = 'Erro de conexão com o servidor';
+        btn.textContent = 'Entrar na conta';
+      }
+    }
+
+    async function fazerCadastro() {
+      const nome = document.getElementById('cadastro-nome').value;
+      const email = document.getElementById('cadastro-email').value;
+      const senha = document.getElementById('cadastro-senha').value;
+      const msg = document.getElementById('cadastro-msg');
+      const btn = document.querySelector('#tab-cadastro .btn-submit');
+      btn.textContent = 'Criando conta...';
+      try {
+        const res = await fetch('http://127.0.0.1:8000/auth/cadastro', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nome, email, senha, nivel: nivelSelecionado })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          msg.className = 'msg success';
+          msg.textContent = 'Conta criada com sucesso! Faça login para continuar.';
+          setTimeout(() => mostrarTab('login'), 2000);
+        } else {
+          msg.className = 'msg error';
+          msg.textContent = data.detail || 'Erro ao criar conta';
+          btn.textContent = 'Criar minha conta';
+        }
+      } catch {
+        msg.className = 'msg error';
+        msg.textContent = 'Erro de conexão com o servidor';
+        btn.textContent = 'Criar minha conta';
+      }
+    }
+  </script>
+</body>
+</html>

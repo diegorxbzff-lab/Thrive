@@ -3,97 +3,259 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Thrive — Educação Financeira</title>
+  <title>Thrive — Prospere com seu dinheiro</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: sans-serif; background: #f0f4f0; min-height: 100vh; padding: 24px; }
+    body { font-family: sans-serif; background: #e8f5e9; min-height: 100vh; overflow-x: hidden; }
 
-    .hero { background: #0F6E56; border-radius: 16px; padding: 48px 40px 40px; color: #fff; margin-bottom: 24px; }
-    .logo { display: flex; align-items: center; gap: 10px; margin-bottom: 32px; }
-    .logo-icon { width: 36px; height: 36px; background: #1D9E75; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
-    .logo-text { font-size: 20px; font-weight: 600; color: #fff; }
-    h1 { font-size: 32px; font-weight: 600; margin-bottom: 12px; line-height: 1.2; }
-    .hero p { font-size: 15px; color: #9FE1CB; margin-bottom: 28px; line-height: 1.6; }
-    .btns { display: flex; gap: 12px; flex-wrap: wrap; }
-    .btn-primary { background: #fff; color: #0F6E56; border: none; border-radius: 8px; padding: 10px 22px; font-size: 14px; font-weight: 600; cursor: pointer; }
-    .btn-secondary { background: transparent; color: #fff; border: 1.5px solid rgba(255,255,255,0.4); border-radius: 8px; padding: 10px 22px; font-size: 14px; cursor: pointer; }
-    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 32px; }
-    .stat { background: rgba(255,255,255,0.1); border-radius: 10px; padding: 14px 16px; }
-    .stat-num { font-size: 22px; font-weight: 600; color: #fff; }
-    .stat-label { font-size: 12px; color: #9FE1CB; margin-top: 2px; }
+    .bg-circles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+    .circle { position: absolute; border-radius: 50%; opacity: 0.12; animation: float 8s ease-in-out infinite; }
+    .circle-1 { width: 400px; height: 400px; background: #0F6E56; top: -120px; left: -120px; animation-delay: 0s; }
+    .circle-2 { width: 250px; height: 250px; background: #1D9E75; bottom: -80px; right: -80px; animation-delay: 2s; }
+    .circle-3 { width: 180px; height: 180px; background: #5DCAA5; top: 40%; right: 8%; animation-delay: 4s; }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) scale(1); }
+      50% { transform: translateY(-20px) scale(1.05); }
+    }
 
-    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 24px; }
-    .card { background: #fff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 18px 16px; }
-    .card-icon { width: 36px; height: 36px; border-radius: 8px; background: #EAF3DE; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; color: #3B6D11; font-size: 18px; }
-    .card h3 { font-size: 14px; font-weight: 600; margin-bottom: 4px; color: #1a1a1a; }
-    .card p { font-size: 12px; color: #666; line-height: 1.5; }
+    .wrapper { max-width: 520px; margin: 0 auto; padding: 40px 24px; position: relative; z-index: 1; }
 
-    .levels { background: #fff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 20px; margin-bottom: 24px; }
-    .levels h2 { font-size: 16px; font-weight: 600; margin-bottom: 16px; color: #1a1a1a; }
-    .level-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
-    .level-row:last-child { border-bottom: none; }
-    .badge { border-radius: 6px; padding: 4px 10px; font-size: 12px; font-weight: 600; min-width: 100px; text-align: center; }
+    nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 48px; animation: slideDown 0.5s ease forwards; }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; }
+    .nav-logo-icon { width: 38px; height: 38px; background: #0F6E56; border-radius: 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(15,110,86,0.3); animation: pulse 3s ease-in-out infinite; }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 4px 12px rgba(15,110,86,0.3); }
+      50% { box-shadow: 0 4px 22px rgba(15,110,86,0.6); }
+    }
+    .nav-logo-text { font-size: 20px; font-weight: 700; color: #0F6E56; }
+    .nav-btn { padding: 8px 20px; background: #0F6E56; color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+    .nav-btn:hover { background: #1D9E75; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(15,110,86,0.3); }
+
+    .hero { text-align: center; margin-bottom: 40px; animation: slideUp 0.6s ease 0.1s both; }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .hero-badge { display: inline-flex; align-items: center; gap: 6px; background: #EAF3DE; color: #27500A; border: 1px solid #c8e6c9; border-radius: 20px; padding: 6px 14px; font-size: 12px; font-weight: 600; margin-bottom: 20px; }
+    .hero h1 { font-size: 36px; font-weight: 800; color: #0F6E56; line-height: 1.2; margin-bottom: 14px; }
+    .hero h1 span { color: #1D9E75; }
+    .hero p { font-size: 15px; color: #555; line-height: 1.7; margin-bottom: 28px; }
+
+    .btn-green { display: block; width: fit-content; margin: 0 auto 16px; padding: 14px 36px; background: #0F6E56; color: #fff; border: none; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.3s ease; }
+    .btn-green:hover { background: #1D9E75; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(15,110,86,0.35); }
+
+    .rotating-text { text-align: center; font-size: 13px; color: #0F6E56; font-weight: 600; min-height: 20px; animation: fadeIn 0.5s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 32px 0 40px; animation: slideUp 0.6s ease 0.2s both; }
+    .stat { background: #fff; border-radius: 14px; padding: 16px; text-align: center; border: 1px solid #c8e6c9; box-shadow: 0 2px 12px rgba(15,110,86,0.08); transition: transform 0.3s ease; }
+    .stat:hover { transform: translateY(-4px); }
+    .stat-num { font-size: 24px; font-weight: 800; color: #0F6E56; }
+    .stat-label { font-size: 11px; color: #888; margin-top: 2px; }
+
+    .pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 40px; animation: slideUp 0.6s ease 0.25s both; }
+    .pillar { background: #0F6E56; border-radius: 14px; padding: 20px 14px; text-align: center; transition: all 0.3s ease; }
+    .pillar:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(15,110,86,0.3); background: #1D9E75; }
+    .pillar-icon { font-size: 26px; margin-bottom: 10px; }
+    .pillar p { font-size: 12px; color: #fff; font-weight: 600; line-height: 1.4; }
+
+    .features-title { font-size: 18px; font-weight: 700; color: #1a1a1a; margin-bottom: 16px; text-align: center; animation: slideUp 0.6s ease 0.3s both; }
+    .features { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 40px; animation: slideUp 0.6s ease 0.3s both; }
+    .feature-card { background: #fff; border-radius: 14px; padding: 20px 16px; border: 1px solid #c8e6c9; box-shadow: 0 2px 12px rgba(15,110,86,0.08); transition: all 0.3s ease; }
+    .feature-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(15,110,86,0.15); }
+    .feature-icon { width: 40px; height: 40px; border-radius: 10px; background: #EAF3DE; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; color: #0F6E56; font-size: 20px; }
+    .feature-card h3 { font-size: 14px; font-weight: 700; color: #1a1a1a; margin-bottom: 4px; }
+    .feature-card p { font-size: 12px; color: #888; line-height: 1.5; }
+
+    .levels { background: #fff; border-radius: 16px; padding: 24px; border: 1px solid #c8e6c9; box-shadow: 0 2px 12px rgba(15,110,86,0.08); margin-bottom: 40px; animation: slideUp 0.6s ease 0.4s both; }
+    .levels h2 { font-size: 16px; font-weight: 700; color: #1a1a1a; margin-bottom: 16px; }
+    .level-row { display: flex; align-items: center; gap: 14px; padding: 12px 0; border-bottom: 1px solid #f0f9f0; }
+    .level-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .badge { border-radius: 8px; padding: 5px 12px; font-size: 12px; font-weight: 700; min-width: 110px; text-align: center; }
     .badge-ini { background: #EAF3DE; color: #27500A; }
     .badge-int { background: #E6F1FB; color: #0C447C; }
     .badge-adv { background: #FAEEDA; color: #633806; }
-    .level-desc { font-size: 13px; color: #555; }
+    .level-desc { font-size: 13px; color: #666; }
 
-    .api-status { background: #173404; border-radius: 12px; padding: 16px 20px; margin-bottom: 24px; }
-    .api-label { font-size: 11px; color: #97C459; letter-spacing: 1px; margin-bottom: 8px; }
-    .api-url { font-family: monospace; font-size: 13px; color: #C0DD97; display: flex; align-items: center; gap: 8px; }
-    .api-dot { width: 8px; height: 8px; border-radius: 50%; background: #639922; }
+    .cta { background: #0F6E56; border-radius: 16px; padding: 32px 24px; text-align: center; margin-bottom: 32px; animation: slideUp 0.6s ease 0.5s both; }
+    .cta h2 { font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+    .cta p { font-size: 14px; color: #9FE1CB; margin-bottom: 20px; }
+    .btn-white { padding: 12px 28px; background: #fff; color: #0F6E56; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.3s ease; }
+    .btn-white:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
 
-    .footer { display: flex; align-items: center; justify-content: space-between; }
-    .footer-text { font-size: 12px; color: #999; }
-    .footer-badge { background: #EAF3DE; color: #27500A; border-radius: 6px; padding: 4px 10px; font-size: 12px; font-weight: 600; }
+    footer { text-align: center; font-size: 12px; color: #aaa; padding-bottom: 24px; }
   </style>
 </head>
 <body>
+  <div class="bg-circles">
+    <div class="circle circle-1"></div>
+    <div class="circle circle-2"></div>
+    <div class="circle circle-3"></div>
+  </div>
 
-  <div class="hero">
-    <div class="logo">
-      <div class="logo-icon">
-        <i class="ti ti-plant" style="font-size:20px;color:#9FE1CB"></i>
+  <div class="wrapper">
+    <nav>
+      <div class="nav-logo">
+        <div class="nav-logo-icon">
+          <i class="ti ti-plant" style="font-size:20px;color:#9FE1CB"></i>
+        </div>
+        <span class="nav-logo-text">Thrive</span>
       </div>
-      <span class="logo-text">Thrive</span>
+      <button class="nav-btn" onclick="window.location.href='login.html'">Entrar</button>
+    </nav>
+
+    <div class="hero">
+      <div class="hero-badge">
+        <i class="ti ti-plant" style="font-size:14px"></i>
+        Educação financeira gamificada
+      </div>
+      <h1>Prospere com <span>seu dinheiro</span></h1>
+      <p>Aprenda finanças do jeito certo — com missões diárias, conquistas e uma comunidade financeira ativa para te apoiar.</p>
+      <button class="btn-green" onclick="window.location.href='login.html'">Começar agora</button>
+      <div class="rotating-text" id="rotating"></div>
     </div>
-    <h1>Prospere com seu dinheiro</h1>
-    <p>Aprenda finanças do jeito certo — com missões diárias, conquistas e uma comunidade financeira ativa.</p>
-    <div class="btns">
-      <button class="btn-primary">Começar agora</button>
-      <button class="btn-secondary">Ver demonstração</button>
+
+    <div class="pillars">
+      <div class="pillar">
+        <div class="pillar-icon">🎯</div>
+        <p>Aprenda com disciplina</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">📊</div>
+        <p>Saiba mais sobre o mundo financeiro</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">🤝</div>
+        <p>Tenha acesso a uma comunidade de pessoas</p>
+      </div>
     </div>
+
     <div class="stats">
       <div class="stat"><div class="stat-num">3</div><div class="stat-label">Níveis de aprendizado</div></div>
       <div class="stat"><div class="stat-num">100+</div><div class="stat-label">Missões disponíveis</div></div>
       <div class="stat"><div class="stat-num">∞</div><div class="stat-label">Possibilidades</div></div>
     </div>
+
+    <p class="features-title">Tudo que você precisa para prosperar</p>
+    <div class="features">
+      <div class="feature-card">
+        <div class="feature-icon"><i class="ti ti-target"></i></div>
+        <h3>Missões diárias</h3>
+        <p>Complete desafios e ganhe XP todo dia</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="ti ti-tree"></i></div>
+        <h3>Árvore evolutiva</h3>
+        <p>Acompanhe seu progresso e conquistas</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="ti ti-messages"></i></div>
+        <h3>Rede social</h3>
+        <p>Conecte-se com outros investidores</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="ti ti-calculator"></i></div>
+        <h3>Simulações</h3>
+        <p>Calcule juros, metas e investimentos</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="ti ti-news"></i></div>
+        <h3>Notícias</h3>
+        <p>Mercado financeiro em tempo real</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="ti ti-bulb"></i></div>
+        <h3>Dicas personalizadas</h3>
+        <p>Conteúdo adaptado ao seu perfil</p>
+      </div>
+    </div>
+
+    <div class="levels">
+      <h2>Para todo tipo de investidor</h2>
+      <div class="level-row">
+        <span class="badge badge-ini">🌱 Iniciante</span>
+        <span class="level-desc">Quer começar a investir e aprender do zero</span>
+      </div>
+      <div class="level-row">
+        <span class="badge badge-int">📈 Intermediário</span>
+        <span class="level-desc">Já investe e quer evoluir ainda mais</span>
+      </div>
+      <div class="level-row">
+        <span class="badge badge-adv">🔥 Avançado</span>
+        <span class="level-desc">Domina finanças e quer se manter atualizado</span>
+      </div>
+    </div>
+<div style="background:#fff;border-radius:16px;padding:24px;border:1px solid #c8e6c9;box-shadow:0 2px 12px rgba(15,110,86,0.08);margin-bottom:40px;">
+      <h2 style="font-size:16px;font-weight:700;color:#1a1a1a;margin-bottom:16px;text-align:center;">🔒 Transparência e segurança</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div style="display:flex;align-items:flex-start;gap:10px;">
+          <span style="font-size:20px;">🆓</span>
+          <div>
+            <p style="font-size:13px;font-weight:700;color:#1a1a1a;">100% gratuito</p>
+            <p style="font-size:12px;color:#888;">Sem mensalidades, sem pegadinhas</p>
+          </div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:10px;">
+          <span style="font-size:20px;">🔐</span>
+          <div>
+            <p style="font-size:13px;font-weight:700;color:#1a1a1a;">Dados protegidos</p>
+            <p style="font-size:12px;color:#888;">Senha criptografada e segura</p>
+          </div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:10px;">
+          <span style="font-size:20px;">🚫</span>
+          <div>
+            <p style="font-size:13px;font-weight:700;color:#1a1a1a;">Sem dados bancários</p>
+            <p style="font-size:12px;color:#888;">Nunca pedimos sua conta ou cartão</p>
+          </div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:10px;">
+          <span style="font-size:20px;">📚</span>
+          <div>
+            <p style="font-size:13px;font-weight:700;color:#1a1a1a;">Projeto educacional</p>
+            <p style="font-size:12px;color:#888;">Feito para ensinar, não para lucrar</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="cta">
+      <h2>Pronto para prosperar?</h2>
+      <p>Crie sua conta gratuitamente e comece sua jornada financeira hoje.</p>
+      <button class="btn-white" onclick="window.location.href='login.html'">Criar conta grátis</button>
+    </div>
+
+    <footer>Thrive v1.0.0 — Educação financeira gamificada</footer>
   </div>
 
-  <div class="features">
-    <div class="card"><div class="card-icon"><i class="ti ti-target"></i></div><h3>Missões diárias</h3><p>Complete desafios e ganhe XP todo dia</p></div>
-    <div class="card"><div class="card-icon"><i class="ti ti-tree"></i></div><h3>Árvore evolutiva</h3><p>Acompanhe seu progresso e conquistas</p></div>
-    <div class="card"><div class="card-icon"><i class="ti ti-messages"></i></div><h3>Rede social</h3><p>Conecte-se com outros investidores</p></div>
-    <div class="card"><div class="card-icon"><i class="ti ti-calculator"></i></div><h3>Simulações</h3><p>Calcule juros, metas e investimentos</p></div>
-  </div>
+  <script>
+    const frases = [
+      "🌱 Mais de 1.200 pessoas já estão prosperando",
+      "📈 Missão diária te espera hoje",
+      "🏆 Conquiste seu primeiro badge agora",
+      "💡 Seu futuro financeiro começa aqui",
+      "🤝 Junte-se à comunidade Thrive"
+    ];
+    let i = 0;
+    const el = document.getElementById('rotating');
+    function trocarFrase() {
+      el.style.opacity = 0;
+      setTimeout(() => {
+        el.textContent = frases[i % frases.length];
+        el.style.opacity = 1;
+        i++;
+      }, 300);
+    }
+    trocarFrase();
+    setInterval(trocarFrase, 3000);
 
-  <div class="levels">
-    <h2>Escolha seu nível</h2>
-    <div class="level-row"><span class="badge badge-ini">Iniciante</span><span class="level-desc">Quer começar a investir e aprender do zero</span></div>
-    <div class="level-row"><span class="badge badge-int">Intermediário</span><span class="level-desc">Já investe e quer evoluir ainda mais</span></div>
-    <div class="level-row"><span class="badge badge-adv">Avançado</span><span class="level-desc">Domina finanças e quer se manter atualizado</span></div>
-  </div>
-
-  <div class="api-status">
-    <div class="api-label">API STATUS</div>
-    <div class="api-url"><div class="api-dot"></div>http://127.0.0.1:8000 — online</div>
-  </div>
-
-  <div class="footer">
-    <span class="footer-text">Thrive v1.0.0 — Educação financeira gamificada</span>
-    <span class="footer-badge">Em desenvolvimento</span>
-  </div>
-
+    const style = document.createElement('style');
+    style.textContent = '#rotating { transition: opacity 0.3s ease; }';
+    document.head.appendChild(style);
+  </script>
 </body>
 </html>
