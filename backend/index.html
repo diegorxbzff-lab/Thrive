@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thrive — Educação Financeira</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: sans-serif; background: #f0f4f0; min-height: 100vh; padding: 24px; }
+
+    .hero { background: #0F6E56; border-radius: 16px; padding: 48px 40px 40px; color: #fff; margin-bottom: 24px; }
+    .logo { display: flex; align-items: center; gap: 10px; margin-bottom: 32px; }
+    .logo-icon { width: 36px; height: 36px; background: #1D9E75; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+    .logo-text { font-size: 20px; font-weight: 600; color: #fff; }
+    h1 { font-size: 32px; font-weight: 600; margin-bottom: 12px; line-height: 1.2; }
+    .hero p { font-size: 15px; color: #9FE1CB; margin-bottom: 28px; line-height: 1.6; }
+    .btns { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn-primary { background: #fff; color: #0F6E56; border: none; border-radius: 8px; padding: 10px 22px; font-size: 14px; font-weight: 600; cursor: pointer; }
+    .btn-secondary { background: transparent; color: #fff; border: 1.5px solid rgba(255,255,255,0.4); border-radius: 8px; padding: 10px 22px; font-size: 14px; cursor: pointer; }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 32px; }
+    .stat { background: rgba(255,255,255,0.1); border-radius: 10px; padding: 14px 16px; }
+    .stat-num { font-size: 22px; font-weight: 600; color: #fff; }
+    .stat-label { font-size: 12px; color: #9FE1CB; margin-top: 2px; }
+
+    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 24px; }
+    .card { background: #fff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 18px 16px; }
+    .card-icon { width: 36px; height: 36px; border-radius: 8px; background: #EAF3DE; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; color: #3B6D11; font-size: 18px; }
+    .card h3 { font-size: 14px; font-weight: 600; margin-bottom: 4px; color: #1a1a1a; }
+    .card p { font-size: 12px; color: #666; line-height: 1.5; }
+
+    .levels { background: #fff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 20px; margin-bottom: 24px; }
+    .levels h2 { font-size: 16px; font-weight: 600; margin-bottom: 16px; color: #1a1a1a; }
+    .level-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
+    .level-row:last-child { border-bottom: none; }
+    .badge { border-radius: 6px; padding: 4px 10px; font-size: 12px; font-weight: 600; min-width: 100px; text-align: center; }
+    .badge-ini { background: #EAF3DE; color: #27500A; }
+    .badge-int { background: #E6F1FB; color: #0C447C; }
+    .badge-adv { background: #FAEEDA; color: #633806; }
+    .level-desc { font-size: 13px; color: #555; }
+
+    .api-status { background: #173404; border-radius: 12px; padding: 16px 20px; margin-bottom: 24px; }
+    .api-label { font-size: 11px; color: #97C459; letter-spacing: 1px; margin-bottom: 8px; }
+    .api-url { font-family: monospace; font-size: 13px; color: #C0DD97; display: flex; align-items: center; gap: 8px; }
+    .api-dot { width: 8px; height: 8px; border-radius: 50%; background: #639922; }
+
+    .footer { display: flex; align-items: center; justify-content: space-between; }
+    .footer-text { font-size: 12px; color: #999; }
+    .footer-badge { background: #EAF3DE; color: #27500A; border-radius: 6px; padding: 4px 10px; font-size: 12px; font-weight: 600; }
+  </style>
+</head>
+<body>
+
+  <div class="hero">
+    <div class="logo">
+      <div class="logo-icon">
+        <i class="ti ti-plant" style="font-size:20px;color:#9FE1CB"></i>
+      </div>
+      <span class="logo-text">Thrive</span>
+    </div>
+    <h1>Prospere com seu dinheiro</h1>
+    <p>Aprenda finanças do jeito certo — com missões diárias, conquistas e uma comunidade financeira ativa.</p>
+    <div class="btns">
+      <button class="btn-primary">Começar agora</button>
+      <button class="btn-secondary">Ver demonstração</button>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-num">3</div><div class="stat-label">Níveis de aprendizado</div></div>
+      <div class="stat"><div class="stat-num">100+</div><div class="stat-label">Missões disponíveis</div></div>
+      <div class="stat"><div class="stat-num">∞</div><div class="stat-label">Possibilidades</div></div>
+    </div>
+  </div>
+
+  <div class="features">
+    <div class="card"><div class="card-icon"><i class="ti ti-target"></i></div><h3>Missões diárias</h3><p>Complete desafios e ganhe XP todo dia</p></div>
+    <div class="card"><div class="card-icon"><i class="ti ti-tree"></i></div><h3>Árvore evolutiva</h3><p>Acompanhe seu progresso e conquistas</p></div>
+    <div class="card"><div class="card-icon"><i class="ti ti-messages"></i></div><h3>Rede social</h3><p>Conecte-se com outros investidores</p></div>
+    <div class="card"><div class="card-icon"><i class="ti ti-calculator"></i></div><h3>Simulações</h3><p>Calcule juros, metas e investimentos</p></div>
+  </div>
+
+  <div class="levels">
+    <h2>Escolha seu nível</h2>
+    <div class="level-row"><span class="badge badge-ini">Iniciante</span><span class="level-desc">Quer começar a investir e aprender do zero</span></div>
+    <div class="level-row"><span class="badge badge-int">Intermediário</span><span class="level-desc">Já investe e quer evoluir ainda mais</span></div>
+    <div class="level-row"><span class="badge badge-adv">Avançado</span><span class="level-desc">Domina finanças e quer se manter atualizado</span></div>
+  </div>
+
+  <div class="api-status">
+    <div class="api-label">API STATUS</div>
+    <div class="api-url"><div class="api-dot"></div>http://127.0.0.1:8000 — online</div>
+  </div>
+
+  <div class="footer">
+    <span class="footer-text">Thrive v1.0.0 — Educação financeira gamificada</span>
+    <span class="footer-badge">Em desenvolvimento</span>
+  </div>
+
+</body>
+</html>
