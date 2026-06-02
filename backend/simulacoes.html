@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thrive — Simulações</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: sans-serif; background: #0a0f0a; min-height: 100vh; overflow-x: hidden; color: #fff; }
+
+    /* CANVAS FUNDO */
+    #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.18; }
+
+    .wrapper { max-width: 520px; margin: 0 auto; padding: 32px 24px; position: relative; z-index: 1; }
+
+    /* NAV */
+    nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; animation: slideDown 0.5s ease forwards; }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: translateY(0); } }
+    .nav-logo { display: flex; align-items: center; gap: 10px; }
+    .nav-logo-icon { width: 36px; height: 36px; background: #1D9E75; border-radius: 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 16px rgba(29,158,117,0.5); animation: pulse 3s ease-in-out infinite; }
+    @keyframes pulse { 0%, 100% { box-shadow: 0 0 16px rgba(29,158,117,0.4); } 50% { box-shadow: 0 0 28px rgba(29,158,117,0.8); } }
+    .nav-logo-text { font-size: 20px; font-weight: 700; color: #1D9E75; }
+    .btn-voltar { padding: 7px 16px; background: transparent; color: #1D9E75; border: 1.5px solid #1D9E75; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+    .btn-voltar:hover { background: #1D9E75; color: #0a0f0a; }
+
+    /* HERO */
+    .hero { text-align: center; margin-bottom: 32px; animation: slideUp 0.6s ease 0.1s both; }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+    .hero-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(29,158,117,0.15); color: #1D9E75; border: 1px solid rgba(29,158,117,0.3); border-radius: 20px; padding: 6px 14px; font-size: 12px; font-weight: 600; margin-bottom: 14px; }
+    .hero h1 { font-size: 28px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+    .hero h1 span { color: #1D9E75; }
+    .hero p { font-size: 14px; color: #666; line-height: 1.6; }
+
+    /* TABS */
+    .tabs { display: flex; gap: 6px; margin-bottom: 24px; background: #111; border-radius: 12px; padding: 5px; border: 1px solid #1a2a1a; animation: slideUp 0.6s ease 0.15s both; }
+    .tab { flex: 1; padding: 10px 6px; border: none; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; background: transparent; color: #555; transition: all 0.3s; }
+    .tab.active { background: #1D9E75; color: #fff; box-shadow: 0 2px 12px rgba(29,158,117,0.4); }
+
+    /* CARD */
+    .sim-card { background: #0f1a0f; border: 1px solid #1a3a1a; border-radius: 20px; padding: 24px; margin-bottom: 20px; animation: slideUp 0.6s ease 0.2s both; display: none; }
+    .sim-card.active { display: block; }
+
+    .sim-card h2 { font-size: 17px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+    .sim-card .sub { font-size: 13px; color: #555; margin-bottom: 20px; }
+
+    .form-group { margin-bottom: 16px; }
+    label { display: block; font-size: 12px; font-weight: 600; color: #1D9E75; margin-bottom: 6px; letter-spacing: 0.5px; text-transform: uppercase; }
+    .input-wrap { position: relative; }
+    .input-prefix { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #1D9E75; font-size: 14px; font-weight: 700; }
+    input[type=number], input[type=range] { width: 100%; }
+    input[type=number] { padding: 11px 14px 11px 32px; background: #0a0f0a; border: 1.5px solid #1a3a1a; border-radius: 10px; font-size: 15px; color: #fff; outline: none; transition: all 0.3s; }
+    input[type=number]:focus { border-color: #1D9E75; box-shadow: 0 0 0 3px rgba(29,158,117,0.15); }
+    input[type=number].sem-prefix { padding-left: 14px; }
+    input[type=range] { -webkit-appearance: none; height: 6px; background: #1a3a1a; border-radius: 10px; margin-top: 8px; cursor: pointer; }
+    input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; background: #1D9E75; border-radius: 50%; box-shadow: 0 0 8px rgba(29,158,117,0.5); }
+    .range-val { text-align: right; font-size: 13px; color: #1D9E75; font-weight: 700; margin-top: 4px; }
+
+    .btn-calc { width: 100%; padding: 13px; background: #1D9E75; color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 8px; transition: all 0.3s; box-shadow: 0 4px 16px rgba(29,158,117,0.3); }
+    .btn-calc:hover { background: #0F6E56; transform: translateY(-1px); box-shadow: 0 6px 24px rgba(29,158,117,0.5); }
+
+    /* RESULTADO */
+    .resultado { background: #0a0f0a; border: 1px solid #1D9E75; border-radius: 14px; padding: 20px; margin-top: 20px; display: none; animation: fadeIn 0.4s ease; }
+    .resultado.show { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+    .resultado-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px; }
+    .resultado-item { background: #0f1a0f; border-radius: 10px; padding: 14px; border: 1px solid #1a3a1a; }
+    .resultado-item .label { font-size: 11px; color: #555; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .resultado-item .valor { font-size: 18px; font-weight: 800; color: #1D9E75; }
+    .resultado-item.destaque { border-color: #1D9E75; grid-column: 1 / -1; }
+    .resultado-item.destaque .valor { font-size: 24px; }
+
+    /* GRÁFICO RESULTADO */
+    #grafico-resultado { width: 100%; height: 140px; margin-top: 8px; }
+
+    /* TICKER */
+    .ticker { background: #0f1a0f; border: 1px solid #1a3a1a; border-radius: 10px; padding: 10px 16px; margin-bottom: 24px; overflow: hidden; animation: slideUp 0.6s ease 0.1s both; }
+    .ticker-inner { display: flex; gap: 32px; animation: ticker 20s linear infinite; white-space: nowrap; }
+    @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    .ticker-item { font-size: 12px; font-weight: 600; }
+    .ticker-item.up { color: #1D9E75; }
+    .ticker-item.down { color: #E24B4A; }
+
+    footer { text-align: center; font-size: 12px; color: #333; padding-bottom: 24px; }
+  </style>
+</head>
+<body>
+
+<!-- CANVAS FUNDO: gráfico animado estilo bolsa -->
+<canvas id="bg-canvas"></canvas>
+
+<div class="wrapper">
+  <nav>
+    <div class="nav-logo">
+      <div class="nav-logo-icon"><i class="ti ti-plant" style="font-size:20px;color:#9FE1CB"></i></div>
+      <span class="nav-logo-text">Thrive</span>
+    </div>
+    <button class="btn-voltar" onclick="window.location.href='dashboard.html'">← Dashboard</button>
+  </nav>
+
+  <div class="ticker">
+    <div class="ticker-inner">
+      <span class="ticker-item up">IBOV ▲ 127.430</span>
+      <span class="ticker-item down">DÓLAR ▼ R$4,97</span>
+      <span class="ticker-item up">SELIC ▲ 13,75%</span>
+      <span class="ticker-item up">OURO ▲ R$312/g</span>
+      <span class="ticker-item down">BTC ▼ R$312.400</span>
+      <span class="ticker-item up">PETR4 ▲ R$38,20</span>
+      <span class="ticker-item up">VALE3 ▲ R$67,80</span>
+      <span class="ticker-item down">EUR ▼ R$5,41</span>
+      <span class="ticker-item up">IBOV ▲ 127.430</span>
+      <span class="ticker-item down">DÓLAR ▼ R$4,97</span>
+      <span class="ticker-item up">SELIC ▲ 13,75%</span>
+      <span class="ticker-item up">OURO ▲ R$312/g</span>
+      <span class="ticker-item down">BTC ▼ R$312.400</span>
+      <span class="ticker-item up">PETR4 ▲ R$38,20</span>
+      <span class="ticker-item up">VALE3 ▲ R$67,80</span>
+      <span class="ticker-item down">EUR ▼ R$5,41</span>
+    </div>
+  </div>
+
+  <div class="hero">
+    <div class="hero-badge"><i class="ti ti-chart-line" style="font-size:14px"></i> Simulador financeiro</div>
+    <h1>Veja seu dinheiro <span>crescer</span></h1>
+    <p>Simule investimentos, metas e compare onde seu dinheiro rende mais.</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="trocarTab(0)">📈 Juros Compostos</button>
+    <button class="tab" onclick="trocarTab(1)">🎯 Metas</button>
+    <button class="tab" onclick="trocarTab(2)">⚖️ Comparação</button>
+  </div>
+
+  <!-- SIMULADOR 1: JUROS COMPOSTOS -->
+  <div class="sim-card active" id="sim-0">
+    <h2>📈 Simulador de Juros Compostos</h2>
+    <p class="sub">Veja como seu dinheiro cresce ao longo do tempo</p>
+    <div class="form-group">
+      <label>Valor inicial</label>
+      <div class="input-wrap">
+        <span class="input-prefix">R$</span>
+        <input type="number" id="jc-inicial" value="1000" min="0">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Aporte mensal</label>
+      <div class="input-wrap">
+        <span class="input-prefix">R$</span>
+        <input type="number" id="jc-aporte" value="200" min="0">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Taxa de juros ao mês: <span id="jc-taxa-val">1%</span></label>
+      <input type="range" id="jc-taxa" min="0.1" max="5" step="0.1" value="1" oninput="document.getElementById('jc-taxa-val').textContent=this.value+'%'">
+    </div>
+    <div class="form-group">
+      <label>Período (anos): <span id="jc-anos-val">5</span></label>
+      <input type="range" id="jc-anos" min="1" max="30" step="1" value="5" oninput="document.getElementById('jc-anos-val').textContent=this.value">
+    </div>
+    <button class="btn-calc" onclick="calcularJC()">Calcular 🚀</button>
+    <div class="resultado" id="res-jc">
+      <div class="resultado-grid">
+        <div class="resultado-item"><div class="label">Total investido</div><div class="valor" id="jc-investido"></div></div>
+        <div class="resultado-item"><div class="label">Juros ganhos</div><div class="valor" id="jc-juros"></div></div>
+        <div class="resultado-item destaque"><div class="label">💰 Valor final</div><div class="valor" id="jc-final"></div></div>
+      </div>
+      <canvas id="grafico-resultado" height="140"></canvas>
+    </div>
+  </div>
+
+  <!-- SIMULADOR 2: METAS -->
+  <div class="sim-card" id="sim-1">
+    <h2>🎯 Simulador de Metas</h2>
+    <p class="sub">Quanto guardar por mês para atingir seu objetivo?</p>
+    <div class="form-group">
+      <label>Objetivo (R$)</label>
+      <div class="input-wrap">
+        <span class="input-prefix">R$</span>
+        <input type="number" id="meta-valor" value="10000" min="0">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Prazo (meses): <span id="meta-meses-val">12</span></label>
+      <input type="range" id="meta-meses" min="1" max="120" step="1" value="12" oninput="document.getElementById('meta-meses-val').textContent=this.value">
+    </div>
+    <div class="form-group">
+      <label>Taxa de juros ao mês: <span id="meta-taxa-val">1%</span></label>
+      <input type="range" id="meta-taxa" min="0.1" max="5" step="0.1" value="1" oninput="document.getElementById('meta-taxa-val').textContent=this.value+'%'">
+    </div>
+    <button class="btn-calc" onclick="calcularMeta()">Calcular 🎯</button>
+    <div class="resultado" id="res-meta">
+      <div class="resultado-grid">
+        <div class="resultado-item destaque"><div class="label">💰 Guardar por mês</div><div class="valor" id="meta-mensal"></div></div>
+        <div class="resultado-item"><div class="label">Total guardado</div><div class="valor" id="meta-total"></div></div>
+        <div class="resultado-item"><div class="label">Juros ganhos</div><div class="valor" id="meta-juros"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIMULADOR 3: COMPARAÇÃO -->
+  <div class="sim-card" id="sim-2">
+    <h2>⚖️ Poupança vs Investimento</h2>
+    <p class="sub">Compare onde seu dinheiro rende mais</p>
+    <div class="form-group">
+      <label>Valor inicial</label>
+      <div class="input-wrap">
+        <span class="input-prefix">R$</span>
+        <input type="number" id="comp-valor" value="5000" min="0">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Período (anos): <span id="comp-anos-val">10</span></label>
+      <input type="range" id="comp-anos" min="1" max="30" step="1" value="10" oninput="document.getElementById('comp-anos-val').textContent=this.value">
+    </div>
+    <button class="btn-calc" onclick="calcularComp()">Comparar ⚖️</button>
+    <div class="resultado" id="res-comp">
+      <div class="resultado-grid">
+        <div class="resultado-item"><div class="label">🏦 Poupança (0.5%/mês)</div><div class="valor" id="comp-poup"></div></div>
+        <div class="resultado-item"><div class="label">📈 CDB (1%/mês)</div><div class="valor" id="comp-cdb"></div></div>
+        <div class="resultado-item"><div class="label">🚀 Tesouro IPCA (1.2%/mês)</div><div class="valor" id="comp-tesouro"></div></div>
+        <div class="resultado-item destaque"><div class="label">💡 Diferença (Poupança vs CDB)</div><div class="valor" id="comp-diff"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>Thrive v1.0.0 — Simulações financeiras</footer>
+</div>
+
+<script>
+  // CANVAS FUNDO: gráfico animado estilo bolsa
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  let pontos = [];
+  let frame = 0;
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  function gerarPonto(i) {
+    const x = (i / 80) * canvas.width;
+    const base = canvas.height * 0.6;
+    const y = base - Math.sin(i * 0.3 + frame * 0.02) * 80 - Math.sin(i * 0.1 + frame * 0.01) * 120 - (i / 80) * canvas.height * 0.25;
+    return { x, y };
+  }
+
+  function desenharGrafico() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.beginPath();
+    for (let i = 0; i <= 80; i++) {
+      const p = gerarPonto(i);
+      i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y);
+    }
+    ctx.strokeStyle = '#1D9E75';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    grad.addColorStop(0, 'rgba(29,158,117,0.3)');
+    grad.addColorStop(1, 'rgba(29,158,117,0)');
+    ctx.lineTo(canvas.width, canvas.height);
+    ctx.lineTo(0, canvas.height);
+    ctx.closePath();
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    // grade
+    ctx.strokeStyle = 'rgba(29,158,117,0.05)';
+    ctx.lineWidth = 1;
+    for (let y = 0; y < canvas.height; y += 60) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+    }
+    for (let x = 0; x < canvas.width; x += 80) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+    }
+
+    frame++;
+    requestAnimationFrame(desenharGrafico);
+  }
+  desenharGrafico();
+
+  // TABS
+  function trocarTab(idx) {
+    document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === idx));
+    document.querySelectorAll('.sim-card').forEach((c, i) => c.classList.toggle('active', i === idx));
+  }
+
+  // FORMATAÇÃO
+  const fmt = v => 'R$ ' + v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+  // JUROS COMPOSTOS
+  function calcularJC() {
+    const inicial = parseFloat(document.getElementById('jc-inicial').value) || 0;
+    const aporte = parseFloat(document.getElementById('jc-aporte').value) || 0;
+    const taxa = parseFloat(document.getElementById('jc-taxa').value) / 100;
+    const meses = parseInt(document.getElementById('jc-anos').value) * 12;
+
+    let saldo = inicial;
+    const historico = [inicial];
+    for (let i = 0; i < meses; i++) {
+      saldo = saldo * (1 + taxa) + aporte;
+      if (i % 12 === 11) historico.push(saldo);
+    }
+
+    const totalInvestido = inicial + aporte * meses;
+    const juros = saldo - totalInvestido;
+
+    document.getElementById('jc-investido').textContent = fmt(totalInvestido);
+    document.getElementById('jc-juros').textContent = fmt(juros);
+    document.getElementById('jc-final').textContent = fmt(saldo);
+
+    const res = document.getElementById('res-jc');
+    res.classList.add('show');
+    desenharGraficoResultado(historico);
+  }
+
+  function desenharGraficoResultado(dados) {
+    const c = document.getElementById('grafico-resultado');
+    const cx = c.getContext('2d');
+    c.width = c.offsetWidth;
+    const max = Math.max(...dados);
+    const min = Math.min(...dados);
+    cx.clearRect(0, 0, c.width, c.height);
+
+    cx.beginPath();
+    dados.forEach((v, i) => {
+      const x = (i / (dados.length - 1)) * c.width;
+      const y = c.height - ((v - min) / (max - min || 1)) * (c.height - 20) - 10;
+      i === 0 ? cx.moveTo(x, y) : cx.lineTo(x, y);
+    });
+    cx.strokeStyle = '#1D9E75';
+    cx.lineWidth = 2.5;
+    cx.stroke();
+
+    const grad = cx.createLinearGradient(0, 0, 0, c.height);
+    grad.addColorStop(0, 'rgba(29,158,117,0.3)');
+    grad.addColorStop(1, 'rgba(29,158,117,0)');
+    cx.lineTo(c.width, c.height);
+    cx.lineTo(0, c.height);
+    cx.closePath();
+    cx.fillStyle = grad;
+    cx.fill();
+  }
+
+  // METAS
+  function calcularMeta() {
+    const objetivo = parseFloat(document.getElementById('meta-valor').value) || 0;
+    const meses = parseInt(document.getElementById('meta-meses').value);
+    const taxa = parseFloat(document.getElementById('meta-taxa').value) / 100;
+    const mensal = objetivo * taxa / (Math.pow(1 + taxa, meses) - 1);
+    const totalGuardado = mensal * meses;
+    const juros = objetivo - totalGuardado;
+
+    document.getElementById('meta-mensal').textContent = fmt(mensal);
+    document.getElementById('meta-total').textContent = fmt(totalGuardado);
+    document.getElementById('meta-juros').textContent = fmt(juros);
+    document.getElementById('res-meta').classList.add('show');
+  }
+
+  // COMPARAÇÃO
+  function calcularComp() {
+    const valor = parseFloat(document.getElementById('comp-valor').value) || 0;
+    const anos = parseInt(document.getElementById('comp-anos').value);
+    const meses = anos * 12;
+    const calc = (taxa) => valor * Math.pow(1 + taxa, meses);
+    const poup = calc(0.005);
+    const cdb = calc(0.01);
+    const tesouro = calc(0.012);
+
+    document.getElementById('comp-poup').textContent = fmt(poup);
+    document.getElementById('comp-cdb').textContent = fmt(cdb);
+    document.getElementById('comp-tesouro').textContent = fmt(tesouro);
+    document.getElementById('comp-diff').textContent = fmt(cdb - poup);
+    document.getElementById('res-comp').classList.add('show');
+  }
+</script>
+</body>
+</html>

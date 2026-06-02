@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thrive — Dashboard</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: sans-serif; background: #0d1f0d; min-height: 100vh; overflow-x: hidden; color: #fff; }
+
+    #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.07; }
+
+    .wrapper { max-width: 520px; margin: 0 auto; padding: 28px 20px 48px; position: relative; z-index: 1; }
+
+    /* NAV */
+    nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; animation: slideDown 0.5s ease forwards; }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: translateY(0); } }
+    .nav-logo { display: flex; align-items: center; gap: 10px; }
+    .nav-logo-icon { width: 36px; height: 36px; background: #1D9E75; border-radius: 10px; display: flex; align-items: center; justify-content: center; animation: pulse 3s ease-in-out infinite; }
+    @keyframes pulse { 0%,100% { box-shadow: 0 0 12px rgba(29,158,117,0.4); } 50% { box-shadow: 0 0 24px rgba(29,158,117,0.8); } }
+    .nav-logo-text { font-size: 20px; font-weight: 700; color: #1D9E75; }
+    .nav-right { display: flex; align-items: center; gap: 10px; }
+    .nav-avatar { width: 36px; height: 36px; background: #1D9E75; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; font-weight: 700; box-shadow: 0 0 10px rgba(29,158,117,0.5); }
+    .nav-sair { padding: 6px 14px; background: transparent; color: #1D9E75; border: 1.5px solid #1D9E75; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+    .nav-sair:hover { background: #1D9E75; color: #0d1f0d; }
+
+    /* WELCOME CARD */
+    .welcome { background: linear-gradient(135deg, #0F6E56 0%, #1D9E75 100%); border-radius: 24px; padding: 28px 24px; margin-bottom: 20px; animation: slideUp 0.6s ease 0.1s both; position: relative; overflow: hidden; border: 1px solid rgba(29,158,117,0.3); }
+    .welcome::before { content: ''; position: absolute; top: -40px; right: -40px; width: 160px; height: 160px; background: rgba(255,255,255,0.05); border-radius: 50%; }
+    .welcome::after { content: '🌱'; position: absolute; right: 24px; bottom: 16px; font-size: 56px; opacity: 0.2; }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+    .welcome-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .nivel-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.15); color: #fff; border-radius: 20px; padding: 5px 12px; font-size: 12px; font-weight: 600; backdrop-filter: blur(4px); }
+    .streak { display: flex; align-items: center; gap: 5px; background: rgba(255,255,255,0.15); border-radius: 20px; padding: 5px 12px; font-size: 12px; font-weight: 600; color: #fff; }
+    .welcome h2 { font-size: 24px; font-weight: 800; color: #fff; margin-bottom: 4px; }
+    .welcome-sub { font-size: 14px; color: rgba(255,255,255,0.75); margin-bottom: 20px; }
+    .xp-label { display: flex; justify-content: space-between; font-size: 12px; color: rgba(255,255,255,0.7); margin-bottom: 8px; }
+    .xp-bar-wrap { background: rgba(0,0,0,0.2); border-radius: 20px; height: 12px; overflow: hidden; }
+    .xp-bar { height: 100%; background: linear-gradient(90deg, #9FE1CB, #fff); border-radius: 20px; transition: width 1.4s cubic-bezier(0.4,0,0.2,1); position: relative; }
+    .xp-bar::after { content: ''; position: absolute; top: 2px; left: 8px; right: 8px; height: 4px; background: rgba(255,255,255,0.4); border-radius: 10px; }
+
+    /* STATS RÁPIDAS */
+    .quick-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 24px; animation: slideUp 0.6s ease 0.15s both; }
+    .qs-card { background: #111d11; border: 1px solid #1a3a1a; border-radius: 14px; padding: 14px 12px; text-align: center; transition: all 0.3s; cursor: default; }
+    .qs-card:hover { border-color: #1D9E75; transform: translateY(-2px); box-shadow: 0 4px 16px rgba(29,158,117,0.15); }
+    .qs-icon { font-size: 20px; margin-bottom: 6px; }
+    .qs-num { font-size: 20px; font-weight: 800; color: #1D9E75; }
+    .qs-label { font-size: 10px; color: #555; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    /* MISSÕES */
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .section-title { font-size: 16px; font-weight: 700; color: #fff; }
+    .section-badge { background: rgba(29,158,117,0.15); color: #1D9E75; border-radius: 8px; padding: 3px 10px; font-size: 12px; font-weight: 600; border: 1px solid rgba(29,158,117,0.3); }
+
+    .missoes { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; animation: slideUp 0.6s ease 0.2s both; }
+    .missao-card { background: #111d11; border: 1px solid #1a3a1a; border-radius: 16px; padding: 18px 16px; display: flex; align-items: center; gap: 14px; transition: all 0.35s cubic-bezier(0.4,0,0.2,1); cursor: pointer; position: relative; overflow: hidden; }
+    .missao-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: #1D9E75; border-radius: 3px 0 0 3px; transform: scaleY(0); transition: transform 0.3s; }
+    .missao-card:hover { border-color: #1D9E75; transform: translateX(6px); box-shadow: 0 4px 20px rgba(29,158,117,0.15); }
+    .missao-card:hover::before { transform: scaleY(1); }
+    .missao-card.concluida { opacity: 0.45; pointer-events: none; }
+    .missao-card.concluida::before { transform: scaleY(1); background: #555; }
+    .missao-icon-wrap { width: 48px; height: 48px; border-radius: 14px; background: rgba(29,158,117,0.1); border: 1px solid rgba(29,158,117,0.2); display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; transition: all 0.3s; }
+    .missao-card:hover .missao-icon-wrap { background: rgba(29,158,117,0.2); border-color: #1D9E75; }
+    .missao-info { flex: 1; }
+    .missao-info h4 { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 3px; }
+    .missao-info p { font-size: 12px; color: #555; }
+    .missao-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
+    .missao-xp { background: rgba(29,158,117,0.15); color: #1D9E75; border-radius: 8px; padding: 4px 10px; font-size: 12px; font-weight: 700; border: 1px solid rgba(29,158,117,0.3); }
+    .missao-check { width: 28px; height: 28px; border-radius: 50%; background: #1D9E75; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; box-shadow: 0 0 10px rgba(29,158,117,0.5); }
+    .missao-arrow { color: #333; font-size: 16px; transition: color 0.3s; }
+    .missao-card:hover .missao-arrow { color: #1D9E75; }
+
+    /* MODAL */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.3s; backdrop-filter: blur(4px); }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal { background: #111d11; border: 1px solid #1a3a1a; border-radius: 24px; padding: 28px 24px; max-width: 460px; width: 100%; max-height: 88vh; overflow-y: auto; transform: translateY(20px) scale(0.97); transition: all 0.35s cubic-bezier(0.4,0,0.2,1); }
+    .modal-overlay.open .modal { transform: translateY(0) scale(1); }
+    .modal-top { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+    .modal-icon-big { width: 52px; height: 52px; border-radius: 14px; background: rgba(29,158,117,0.1); border: 1px solid rgba(29,158,117,0.3); display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; }
+    .modal h3 { font-size: 18px; font-weight: 800; color: #fff; }
+    .modal-xp-tag { display: inline-flex; align-items: center; gap: 4px; background: rgba(29,158,117,0.15); color: #1D9E75; border-radius: 8px; padding: 3px 10px; font-size: 12px; font-weight: 700; margin-top: 4px; border: 1px solid rgba(29,158,117,0.3); }
+    .modal-conteudo { font-size: 14px; color: #aaa; line-height: 1.85; margin-bottom: 24px; background: #0d1f0d; border-radius: 14px; padding: 18px; border-left: 3px solid #1D9E75; white-space: pre-line; }
+    .modal-pergunta { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 14px; }
+    .opcoes { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+    .opcao { padding: 13px 16px; border: 1.5px solid #1a3a1a; border-radius: 12px; font-size: 14px; cursor: pointer; transition: all 0.25s; background: #0d1f0d; text-align: left; color: #aaa; }
+    .opcao:hover { border-color: #1D9E75; color: #fff; background: rgba(29,158,117,0.08); }
+    .opcao.correta { border-color: #1D9E75; background: rgba(29,158,117,0.15); color: #1D9E75; font-weight: 700; }
+    .opcao.errada { border-color: #E24B4A; background: rgba(226,75,74,0.1); color: #E24B4A; }
+    .modal-feedback { padding: 14px 16px; border-radius: 12px; font-size: 14px; font-weight: 600; margin-bottom: 16px; display: none; }
+    .modal-feedback.show { display: block; }
+    .modal-feedback.ok { background: rgba(29,158,117,0.15); color: #1D9E75; border: 1px solid rgba(29,158,117,0.3); }
+    .modal-feedback.erro { background: rgba(226,75,74,0.1); color: #E24B4A; border: 1px solid rgba(226,75,74,0.3); }
+    .btn-fechar { width: 100%; padding: 13px; background: #1D9E75; color: #fff; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 16px rgba(29,158,117,0.3); }
+    .btn-fechar:hover { background: #0F6E56; }
+
+    /* XP POPUP */
+    .xp-popup { position: fixed; top: 80px; right: 20px; background: #1D9E75; color: #fff; border-radius: 14px; padding: 12px 20px; font-size: 16px; font-weight: 800; z-index: 200; opacity: 0; transform: translateY(-10px) scale(0.9); transition: all 0.4s cubic-bezier(0.4,0,0.2,1); pointer-events: none; box-shadow: 0 4px 20px rgba(29,158,117,0.5); }
+    .xp-popup.show { opacity: 1; transform: translateY(0) scale(1); }
+
+    /* MÓDULOS */
+    .modulos { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 28px; animation: slideUp 0.6s ease 0.3s both; }
+    .modulo-card { background: #111d11; border: 1px solid #1a3a1a; border-radius: 16px; padding: 20px 16px; cursor: pointer; transition: all 0.35s cubic-bezier(0.4,0,0.2,1); text-align: center; position: relative; overflow: hidden; }
+    .modulo-card::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(29,158,117,0.08), transparent); opacity: 0; transition: opacity 0.3s; }
+    .modulo-card:hover { border-color: #1D9E75; transform: translateY(-4px); box-shadow: 0 8px 28px rgba(29,158,117,0.2); }
+    .modulo-card:hover::after { opacity: 1; }
+    .modulo-icon { width: 48px; height: 48px; border-radius: 14px; background: rgba(29,158,117,0.1); border: 1px solid rgba(29,158,117,0.2); display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; color: #1D9E75; font-size: 22px; transition: all 0.3s; }
+    .modulo-card:hover .modulo-icon { background: #1D9E75; color: #fff; box-shadow: 0 0 16px rgba(29,158,117,0.5); }
+    .modulo-card h3 { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+    .modulo-card p { font-size: 11px; color: #555; }
+
+    /* NOTÍCIAS */
+    .noticias { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; animation: slideUp 0.6s ease 0.4s both; }
+    .noticia-card { background: #111d11; border: 1px solid #1a3a1a; border-radius: 16px; padding: 18px; transition: all 0.3s; cursor: pointer; }
+    .noticia-card:hover { border-color: #1D9E75; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(29,158,117,0.12); }
+    .noticia-label { font-size: 10px; font-weight: 700; color: #1D9E75; letter-spacing: 1.5px; margin-bottom: 8px; text-transform: uppercase; }
+    .noticia-card h4 { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 6px; line-height: 1.4; }
+    .noticia-card p { font-size: 12px; color: #666; line-height: 1.6; }
+    .noticia-fonte { font-size: 11px; color: #333; margin-top: 10px; display: flex; align-items: center; gap: 4px; }
+    .noticias-loading { text-align: center; padding: 24px; color: #555; font-size: 14px; }
+
+    footer { text-align: center; font-size: 12px; color: #333; padding-bottom: 24px; }
+  </style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<div class="xp-popup" id="xp-popup">+0 XP 🎉</div>
+
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" id="modal">
+    <div class="modal-top">
+      <div class="modal-icon-big" id="modal-icon">📖</div>
+      <div>
+        <h3 id="modal-titulo"></h3>
+        <div class="modal-xp-tag" id="modal-xp-tag">+50 XP</div>
+      </div>
+    </div>
+    <div class="modal-conteudo" id="modal-conteudo"></div>
+    <div class="modal-pergunta" id="modal-pergunta"></div>
+    <div class="opcoes" id="modal-opcoes"></div>
+    <div class="modal-feedback" id="modal-feedback"></div>
+    <button class="btn-fechar" id="btn-fechar" onclick="fecharModal()" style="display:none">✓ Fechar</button>
+  </div>
+</div>
+
+<div class="wrapper">
+  <nav>
+    <div class="nav-logo">
+      <div class="nav-logo-icon"><i class="ti ti-plant" style="font-size:20px;color:#fff"></i></div>
+      <span class="nav-logo-text">Thrive</span>
+    </div>
+    <div class="nav-right">
+      <div class="nav-avatar" id="avatar">D</div>
+      <button class="nav-sair" onclick="sair()">Sair</button>
+    </div>
+  </nav>
+
+  <div class="welcome">
+    <div class="welcome-top">
+      <div class="nivel-badge" id="nivel-badge">🌱 Iniciante</div>
+      <div class="streak">🔥 <span id="streak-num">1</span> dia seguido</div>
+    </div>
+    <h2 id="saudacao">Olá!</h2>
+    <p class="welcome-sub">Continue sua jornada financeira hoje 🚀</p>
+    <div class="xp-label">
+      <span id="xp-atual">0 XP</span>
+      <span>Próximo nível: 500 XP</span>
+    </div>
+    <div class="xp-bar-wrap"><div class="xp-bar" id="xp-bar" style="width:0%"></div></div>
+  </div>
+
+  <div class="quick-stats">
+    <div class="qs-card"><div class="qs-icon">✅</div><div class="qs-num" id="qs-missoes">0</div><div class="qs-label">Missões feitas</div></div>
+    <div class="qs-card"><div class="qs-icon">⭐</div><div class="qs-num" id="qs-xp">0</div><div class="qs-label">XP total</div></div>
+    <div class="qs-card"><div class="qs-icon">🏆</div><div class="qs-num" id="qs-nivel">1</div><div class="qs-label">Nível atual</div></div>
+  </div>
+
+  <div class="section-header">
+    <p class="section-title">📋 Missões do dia</p>
+    <span class="section-badge" id="missoes-badge">0/3</span>
+  </div>
+  <div class="missoes" id="missoes-container"></div>
+
+  <div class="section-header">
+    <p class="section-title">⚙️ Módulos</p>
+  </div>
+  <div class="modulos">
+    <div class="modulo-card" onclick="window.location.href='simulacoes.html'">
+      <div class="modulo-icon"><i class="ti ti-calculator"></i></div>
+      <h3>Simulações</h3>
+      <p>Calcule seus objetivos</p>
+    </div>
+    <div class="modulo-card">
+      <div class="modulo-icon"><i class="ti ti-messages"></i></div>
+      <h3>Comunidade</h3>
+      <p>Feed financeiro</p>
+    </div>
+    <div class="modulo-card">
+      <div class="modulo-icon"><i class="ti ti-book"></i></div>
+      <h3>Aprendizado</h3>
+      <p>Lições por nível</p>
+    </div>
+    <div class="modulo-card">
+      <div class="modulo-icon"><i class="ti ti-tree"></i></div>
+      <h3>Árvore evolutiva</h3>
+      <p>Suas conquistas</p>
+    </div>
+    <div class="modulo-card">
+      <div class="modulo-icon"><i class="ti ti-news"></i></div>
+      <h3>Notícias</h3>
+      <p>Mercado em tempo real</p>
+    </div>
+    <div class="modulo-card">
+      <div class="modulo-icon"><i class="ti ti-bulb"></i></div>
+      <h3>Dicas</h3>
+      <p>Personalizadas pra você</p>
+    </div>
+  </div>
+
+  <div class="section-header">
+    <p class="section-title">📰 Notícias financeiras</p>
+  </div>
+  <div class="noticias" id="noticias-container">
+    <div class="noticias-loading">⏳ Carregando notícias...</div>
+  </div>
+
+  <footer>Thrive v1.0.0 — Educação financeira gamificada</footer>
+</div>
+
+<script>
+  // CANVAS FUNDO
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  let frame = 0;
+  function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+  function desenharFundo() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.beginPath();
+    for (let i = 0; i <= 80; i++) {
+      const x = (i / 80) * canvas.width;
+      const y = canvas.height * 0.6 - Math.sin(i * 0.3 + frame * 0.015) * 60 - Math.sin(i * 0.1 + frame * 0.008) * 100 - (i / 80) * canvas.height * 0.2;
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = '#1D9E75'; ctx.lineWidth = 1.5; ctx.stroke();
+    const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    grad.addColorStop(0, 'rgba(29,158,117,0.2)'); grad.addColorStop(1, 'rgba(29,158,117,0)');
+    ctx.lineTo(canvas.width, canvas.height); ctx.lineTo(0, canvas.height); ctx.closePath();
+    ctx.fillStyle = grad; ctx.fill();
+    frame++; requestAnimationFrame(desenharFundo);
+  }
+  desenharFundo();
+
+  // DADOS
+  const nome = localStorage.getItem('nome') || 'Usuário';
+  const nivel = localStorage.getItem('nivel') || 'iniciante';
+  let xp = parseInt(localStorage.getItem('xp') || '0');
+  const concluidas = JSON.parse(localStorage.getItem('missoes_concluidas') || '[]');
+  const nivelEmoji = { iniciante: '🌱 Iniciante', intermediario: '📈 Intermediário', avancado: '🔥 Avançado' };
+  const nivelNum = { iniciante: 1, intermediario: 2, avancado: 3 };
+
+  document.getElementById('saudacao').textContent = `Olá, ${nome}! 👋`;
+  document.getElementById('avatar').textContent = nome.charAt(0).toUpperCase();
+  document.getElementById('nivel-badge').textContent = nivelEmoji[nivel] || '🌱 Iniciante';
+  document.getElementById('streak-num').textContent = parseInt(localStorage.getItem('streak') || '1');
+
+  function atualizarStats() {
+    document.getElementById('xp-atual').textContent = xp + ' XP';
+    document.getElementById('qs-xp').textContent = xp;
+    document.getElementById('qs-missoes').textContent = concluidas.length;
+    document.getElementById('qs-nivel').textContent = nivelNum[nivel] || 1;
+    const pct = Math.min((xp / 500) * 100, 100);
+    setTimeout(() => { document.getElementById('xp-bar').style.width = pct + '%'; }, 400);
+    document.getElementById('missoes-badge').textContent = concluidas.length + '/3';
+  }
+  atualizarStats();
+
+  function mostrarXPPopup(pontos) {
+    const popup = document.getElementById('xp-popup');
+    popup.textContent = `+${pontos} XP 🎉`;
+    popup.classList.add('show');
+    setTimeout(() => popup.classList.remove('show'), 2800);
+  }
+
+  // MISSÕES
+  const missoes = [
+    { id: 1, icon: '📖', titulo: 'O que são juros compostos?', descricao: 'Leia e responda sobre juros compostos', xp: 50, conteudo: `Juros compostos são chamados de "o maior milagre da humanidade". Mas por quê?\n\nQuando você investe R$1.000 com juros de 1% ao mês, no primeiro mês você ganha R$10. No segundo mês, você não ganha juros sobre R$1.000, mas sim sobre R$1.010. E assim por diante.\n\nIsso cria um efeito "bola de neve": quanto mais tempo o dinheiro fica investido, mais rápido ele cresce. Em 12 meses, R$1.000 a 1% ao mês vira R$1.126 — e não R$1.120 como seriam nos juros simples.\n\nPor isso, começar a investir cedo faz uma diferença enorme no longo prazo.`, pergunta: 'O que diferencia os juros compostos dos juros simples?', opcoes: ['Os juros compostos rendem sobre o valor inicial apenas', 'Os juros compostos rendem sobre o valor acumulado (capital + juros anteriores)', 'Os juros compostos são sempre menores que os simples', 'Não há diferença entre eles'], correta: 1 },
+    { id: 2, icon: '💰', titulo: 'O que é a reserva de emergência?', descricao: 'Aprenda sobre segurança financeira', xp: 40, conteudo: `A reserva de emergência é o dinheiro guardado para imprevistos: perda de emprego, problemas de saúde, conserto do carro, etc.\n\nOs especialistas recomendam ter de 3 a 6 meses de seus gastos mensais guardados. Se você gasta R$2.000 por mês, sua reserva ideal é entre R$6.000 e R$12.000.\n\nOnde guardar? Em um investimento seguro, com liquidez diária (você pode sacar quando precisar) e que renda pelo menos o CDI. O Tesouro Selic e alguns CDBs de bancos digitais são boas opções.\n\nSem reserva de emergência, qualquer imprevisto pode virar uma dívida.`, pergunta: 'Qual o tamanho ideal de uma reserva de emergência?', opcoes: ['1 mês de gastos', 'O máximo que conseguir guardar', 'Entre 3 e 6 meses de gastos mensais', 'R$10.000 independente dos seus gastos'], correta: 2 },
+    { id: 3, icon: '📊', titulo: 'Renda fixa x Renda variável', descricao: 'Entenda os tipos de investimento', xp: 60, conteudo: `Existem dois grandes grupos de investimentos:\n\n🔵 Renda Fixa: você sabe quanto vai receber no final. Exemplos: CDB, Tesouro Direto, LCI, LCA. São mais seguros e indicados para a reserva de emergência e objetivos de curto prazo.\n\n🟢 Renda Variável: o retorno não é garantido e pode variar muito. Exemplos: ações, fundos imobiliários (FIIs), criptomoedas. Têm potencial de retorno maior no longo prazo, mas com mais risco.\n\nA dica é: comece pela renda fixa, construa sua reserva, e depois explore a renda variável com o dinheiro que você não vai precisar tão cedo.`, pergunta: 'Qual investimento é mais indicado para a reserva de emergência?', opcoes: ['Ações de grandes empresas', 'Criptomoedas', 'CDB com liquidez diária ou Tesouro Selic', 'Fundos imobiliários'], correta: 2 }
+  ];
+
+  let missaoAtual = null;
+
+  function renderMissoes() {
+    const container = document.getElementById('missoes-container');
+    container.innerHTML = '';
+    missoes.forEach(m => {
+      const concluida = concluidas.includes(m.id);
+      const card = document.createElement('div');
+      card.className = 'missao-card' + (concluida ? ' concluida' : '');
+      card.innerHTML = `
+        <div class="missao-icon-wrap">${m.icon}</div>
+        <div class="missao-info">
+          <h4>${m.titulo}</h4>
+          <p>${m.descricao}</p>
+        </div>
+        <div class="missao-right">
+          ${concluida
+            ? '<div class="missao-check"><i class="ti ti-check"></i></div>'
+            : `<div class="missao-xp">+${m.xp} XP</div><i class="ti ti-chevron-right missao-arrow"></i>`}
+        </div>`;
+      if (!concluida) card.onclick = () => abrirMissao(m);
+      container.appendChild(card);
+    });
+    document.getElementById('missoes-badge').textContent = concluidas.length + '/3';
+  }
+
+  function abrirMissao(m) {
+    missaoAtual = m;
+    document.getElementById('modal-icon').textContent = m.icon;
+    document.getElementById('modal-titulo').textContent = m.titulo;
+    document.getElementById('modal-xp-tag').textContent = `+${m.xp} XP`;
+    document.getElementById('modal-conteudo').textContent = m.conteudo;
+    document.getElementById('modal-pergunta').textContent = '❓ ' + m.pergunta;
+    document.getElementById('modal-feedback').className = 'modal-feedback';
+    document.getElementById('btn-fechar').style.display = 'none';
+    const opcoes = document.getElementById('modal-opcoes');
+    opcoes.innerHTML = '';
+    m.opcoes.forEach((op, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'opcao';
+      btn.textContent = op;
+      btn.onclick = () => responder(i, btn);
+      opcoes.appendChild(btn);
+    });
+    document.getElementById('modal-overlay').classList.add('open');
+  }
+
+  function responder(idx, btn) {
+    const m = missaoAtual;
+    document.querySelectorAll('.opcao').forEach(o => o.onclick = null);
+    const feedback = document.getElementById('modal-feedback');
+    if (idx === m.correta) {
+      btn.classList.add('correta');
+      feedback.textContent = `✅ Correto! Você ganhou +${m.xp} XP!`;
+      feedback.className = 'modal-feedback show ok';
+      xp += m.xp;
+      localStorage.setItem('xp', xp);
+      concluidas.push(m.id);
+      localStorage.setItem('missoes_concluidas', JSON.stringify(concluidas));
+      atualizarStats();
+      mostrarXPPopup(m.xp);
+      renderMissoes();
+    } else {
+      btn.classList.add('errada');
+      document.querySelectorAll('.opcao')[m.correta].classList.add('correta');
+      feedback.textContent = '❌ Resposta errada! Mas não desanime, continue estudando.';
+      feedback.className = 'modal-feedback show erro';
+    }
+    document.getElementById('btn-fechar').style.display = 'block';
+  }
+
+  function fecharModal() { document.getElementById('modal-overlay').classList.remove('open'); }
+  document.getElementById('modal-overlay').addEventListener('click', function(e) { if (e.target === this) fecharModal(); });
+
+  // NOTÍCIAS
+  function noticiasFixas() {
+    const container = document.getElementById('noticias-container');
+    const noticias = [
+      { tag: 'ECONOMIA', titulo: 'Selic: o que é e como afeta seus investimentos', desc: 'A taxa Selic é a taxa básica de juros da economia brasileira. Ela influencia diretamente o rendimento da renda fixa e o custo do crédito.', fonte: 'Banco Central do Brasil' },
+      { tag: 'INVESTIMENTOS', titulo: 'Tesouro Direto: como começar a investir com pouco', desc: 'Com apenas R$30 você já pode investir no Tesouro Direto, uma das formas mais seguras de investimento disponíveis no Brasil.', fonte: 'Tesouro Nacional' },
+      { tag: 'MERCADO', titulo: 'Ibovespa: entenda o principal índice da bolsa brasileira', desc: 'O Ibovespa é o indicador do desempenho médio das ações mais negociadas na B3, a bolsa de valores brasileira.', fonte: 'B3' },
+      { tag: 'DICA', titulo: 'Regra dos 50-30-20: como organizar seu orçamento', desc: '50% da renda para necessidades, 30% para desejos e 20% para investimentos. Uma fórmula simples para organizar as finanças.', fonte: 'Educação Financeira' },
+      { tag: 'CÂMBIO', titulo: 'Como o dólar afeta o dia a dia dos brasileiros', desc: 'A variação do dólar impacta preços de produtos importados, viagens internacionais e até o preço da gasolina no Brasil.', fonte: 'Banco Central' },
+    ];
+    container.innerHTML = '';
+    noticias.forEach(n => {
+      const card = document.createElement('div');
+      card.className = 'noticia-card';
+      card.innerHTML = `<div class="noticia-label">📰 ${n.tag}</div><h4>${n.titulo}</h4><p>${n.desc}</p><div class="noticia-fonte"><i class="ti ti-building"></i> ${n.fonte}</div>`;
+      container.appendChild(card);
+    });
+  }
+
+  function sair() { localStorage.clear(); window.location.href = 'login.html'; }
+
+  renderMissoes();
+  noticiasFixas();
+</script>
+</body>
+</html>
